@@ -7,7 +7,7 @@ import refugioRoutes from './src/routes/refugioRoutes.mjs';
 import mascotaRoutes from './src/routes/mascotaRoutes.mjs';
 import usuarioRoutes from './src/routes/usuarioRoutes.mjs';
 import solicitudAdopcionRoutes from './routes/solicitudAdopcion.mjs';
-import solicitudDarEnAdopcionRoutes from './routes/solicitudDarEnAdopcion.mjs';
+import solicitudDarEnAdopcionRoutes from './src/routes/solicitudDarEnAdopcion.mjs';
 
 dotenv.config();
 await connectDB();        // conecta a Mongo

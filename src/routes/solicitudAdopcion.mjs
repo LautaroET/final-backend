@@ -1,10 +1,14 @@
 import express from 'express';
-import * as controller from '../controllers/solicitudAdopcionController.mjs';
+import {
+  crearSolicitud,
+  listarPorRefugio,
+  responderSolicitud
+} from '../controllers/solicitudAdopcionController.mjs';
 
 const router = express.Router();
 
-router.post('/solicitudes-adopcion', controller.crearSolicitud);
-router.get('/refugios/:refugioId/solicitudes-adopcion', controller.listarPorRefugio);
-router.put('/solicitudes-adopcion/:id/responder', controller.responderSolicitud);
+router.post('/solicitudes-adopcion', crearSolicitud);
+router.get('/refugios/:refugioId/solicitudes-adopcion', listarPorRefugio);
+router.put('/solicitudes-adopcion/:id/responder', responderSolicitud);
 
 export default router;
