@@ -6,8 +6,6 @@ import {
     actualizarUsuarioController,
     eliminarUsuarioController
 } from '../controllers/usuarioController.mjs';
-import { usuarioValidationRules } from '../validation/usuarioValidation.mjs';
-import { handleValidationErrors } from '../validation/errorMiddleware.mjs';
 
 const router = express.Router();
 
@@ -17,7 +15,6 @@ router.get('/usuarios', obtenerUsuariosController);
 // Crear nuevo usuario
 router.post(
     '/usuarios',
-    usuarioValidationRules(),
     handleValidationErrors,
     crearUsuarioController
 );
@@ -28,7 +25,6 @@ router.get('/usuarios/:id', obtenerUsuarioPorIdController);
 // Actualizar usuario
 router.put(
     '/usuarios/:id',
-    usuarioValidationRules(),
     handleValidationErrors,
     actualizarUsuarioController
 );

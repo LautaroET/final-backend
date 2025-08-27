@@ -6,8 +6,7 @@ import {
     actualizarRefugioController,
     eliminarRefugioController
 } from '../controllers/refugioController.mjs';
-import { refugioValidationRules } from '../validation/refugioValidation.mjs';
-import { handleValidationErrors } from '../validation/errorMiddleware.mjs';
+
 
 const router = express.Router();
 
@@ -17,8 +16,6 @@ router.get('/refugios', obtenerRefugiosController);
 // Crear nuevo refugio
 router.post(
     '/refugios',
-    refugioValidationRules(),
-    handleValidationErrors,
     crearRefugioController
 );
 
@@ -28,8 +25,6 @@ router.get('/refugios/:id', obtenerRefugioPorIdController);
 // Actualizar refugio
 router.put(
     '/refugios/:id',
-    refugioValidationRules(),
-    handleValidationErrors,
     actualizarRefugioController
 );
 
