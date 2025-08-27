@@ -6,6 +6,7 @@ import {
     actualizarUsuarioController,
     eliminarUsuarioController
 } from '../controllers/usuarioController.mjs';
+import { handleValidationErrors } from '../middlewares/validations.mjs';
 
 const router = express.Router();
 
