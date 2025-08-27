@@ -8,10 +8,10 @@ const mascotaSchema = new mongoose.Schema(
     gender:      { type: String, enum: ['Macho', 'Hembra'], required: true },
     size:        { type: String, enum: ['Pequeño', 'Mediano', 'Grande'], required: true },
     personality: { type: String, required: true },
-    status: { type: String, enum: ['En adopción', 'Adoptado', 'Reservado'], required },
+    status:      { type: String, enum: ['En adopción', 'Adoptado', 'Reservado'], default: 'En adopción' },
     description: { type: String, required: true },
     history:     { type: String },
-    images: [{ type: String, required: true }]
+    images:      [{ type: String, required: true }],
     refugio:     { type: mongoose.Schema.Types.ObjectId, ref: 'Refugio', required: true },
     creador:     { type: String, default: 'Tapia Lautaro' }
   },
