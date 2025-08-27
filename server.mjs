@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import { connectDB } from './src/config/dbConfig.mjs';
 import refugioRoutes from './src/routes/refugioRoutes.mjs';
 import mascotaRoutes from './src/routes/mascotaRoutes.mjs';
-import usuarioRoutes from './routes/usuarioRoutes.mjs'; 
+import usuarioRoutes from './routes/usuarioRoutes.mjs';
 import solicitudAdopcionRoutes from './routes/solicitudAdopcion.mjs';
 import solicitudDarEnAdopcionRoutes from './routes/solicitudDarEnAdopcion.mjs';
 
