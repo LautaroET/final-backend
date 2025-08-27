@@ -6,6 +6,8 @@ import { connectDB } from './src/config/dbConfig.mjs';
 import refugioRoutes from './src/routes/refugioRoutes.mjs';
 import mascotaRoutes from './src/routes/mascotaRoutes.mjs';
 import usuarioRoutes from './src/routes/usuarioRoutes.mjs';
+import solicitudAdopcionRoutes from './routes/solicitudAdopcion.mjs';
+import solicitudDarEnAdopcionRoutes from './routes/solicitudDarEnAdopcion.mjs';
 
 dotenv.config();
 await connectDB();        // conecta a Mongo
@@ -19,7 +21,9 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api', refugioRoutes);
 app.use('/api', mascotaRoutes);
-app.use('/api', mascotaRoutes);
+app.use('/api', usuarioRoutes);
+app.use('/api', solicitudAdopcionRoutes);
+app.use('/api', solicitudDarEnAdopcionRoutes);
 
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, '0.0.0.0', () =>

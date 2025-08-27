@@ -2,7 +2,17 @@ import * as mascotaService from '../services/mascotaService.mjs';
 
 export const obtenerMascotasController = async (req, res) => {
   try {
-    const mascotas = await mascotaService.obtenerMascotas();
+    const filtros = {};
+
+    if (req.query.breed) filtros.breed = new RegExp(req.query.breed, 'i');
+    if (req.query.ubicacion) filtros['refugio.address'] = new RegExp(req.query.ubicacion, 'i');
+    if (req.query.size) filtros.size = req.query.size;
+    if (req.query.gender) filtros.gender = req.query.gender;
+    if (req.query.status) filtros.status = req.query.status;
+    if (req.query.ageMin) filtros.age = { ...filtros.age, $gte: Number(req.query.ageMin) };
+    if (req.query.ageMax) filtros.age = { ...filtros.age, $lte: Number(req.query.ageMax) };
+
+    const mascotas = await mascotaService.obtenerMascotasConFiltros(filtros);
     res.json(mascotas);
   } catch (err) {
     res.status(500).json({ mensaje: 'Error al obtener mascotas', error: err.message });
