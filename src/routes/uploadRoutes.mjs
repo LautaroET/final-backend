@@ -1,5 +1,5 @@
 import express from 'express';
-import upload from '../middlewares/upload.mjs';
+import upload from '../validation/upload.mjs';
 import path from 'path';
 
 const router = express.Router();
