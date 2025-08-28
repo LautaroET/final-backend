@@ -1,5 +1,5 @@
 import express from 'express';
-import upload from '../middlewares/upload.mjs';
+import upload from '../validation/upload.mjs';
 import Mascota from '../models/Mascota.mjs';
 import Refugio from '../models/Refugio.mjs';
 import Usuario from '../models/Usuario.mjs';
