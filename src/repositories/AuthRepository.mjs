@@ -11,10 +11,15 @@ export class AuthRepository {
     return await Usuario.create({ ...data, password: hashed });
   }
 
+  async actualizarPassword(userId, hashedPassword) {
+    return await Usuario.findByIdAndUpdate(
+      userId,
+      { password: hashedPassword },
+      { new: true }
+    );
+  }
+
   async compararPassword(raw, hash) {
     return await bcrypt.compare(raw, hash);
   }
-}
-async actualizarPassword(userId, hashedPassword) {
-  await Usuario.findByIdAndUpdate(userId, { password: hashedPassword });
 }
