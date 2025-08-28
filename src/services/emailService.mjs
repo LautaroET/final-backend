@@ -9,6 +9,6 @@ export const enviarEmail = async ({ to, subject, text }) => {
       text
     });
   } catch (err) {
-    console.error('Error al enviar email:', err.message);
+    console.error('❌ Error al enviar email:', err.message);
   }
 };
