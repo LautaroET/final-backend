@@ -2,18 +2,38 @@ import * as mascotaService from '../services/mascotaService.mjs';
 
 export const obtenerMascotasController = async (req, res) => {
   try {
-    const filtros = {};
+    const {
+      page = 1,
+      limit = 10,
+      sort = 'createdAt',
+      order = 'asc',
+      ...filters
+    } = req.query;
 
-    if (req.query.breed) filtros.breed = new RegExp(req.query.breed, 'i');
-    if (req.query.ubicacion) filtros['refugio.address'] = new RegExp(req.query.ubicacion, 'i');
-    if (req.query.size) filtros.size = req.query.size;
-    if (req.query.gender) filtros.gender = req.query.gender;
-    if (req.query.status) filtros.status = req.query.status;
-    if (req.query.ageMin) filtros.age = { ...filtros.age, $gte: Number(req.query.ageMin) };
-    if (req.query.ageMax) filtros.age = { ...filtros.age, $lte: Number(req.query.ageMax) };
+    const query = {};
 
-    const mascotas = await mascotaService.obtenerMascotasConFiltros(filtros);
-    res.json(mascotas);
+    // Filtros simples
+    if (filters.breed) query.breed = new RegExp(filters.breed, 'i');
+    if (filters.size) query.size = filters.size;
+    if (filters.gender) query.gender = filters.gender;
+    if (filters.status) query.status = filters.status;
+    if (filters.ageMin || filters.ageMax) {
+      query.age = {};
+      if (filters.ageMin) query.age.$gte = Number(filters.ageMin);
+      if (filters.ageMax) query.age.$lte = Number(filters.ageMax);
+    }
+
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const mascotas = await mascotaService.obtenerMascotasPaginados(query, skip, Number(limit), sort, order);
+    const total = await mascotaService.contarMascotas(query);
+
+    res.json({
+      data: mascotas,
+      total,
+      page: Number(page),
+      pages: Math.ceil(total / Number(limit))
+    });
   } catch (err) {
     res.status(500).json({ mensaje: 'Error al obtener mascotas', error: err.message });
   }

@@ -10,3 +10,14 @@ export const obtenerMascotasPorRefugio = (refugioId) => repo.obtenerPorRefugio(r
 export const obtenerMascotasConFiltros = (filtros) => {
   return Mascota.find(filtros).populate('refugio', 'name address');
 };
+export const obtenerMascotasPaginados = (query, skip, limit, sort, order) => {
+  return Mascota.find(query)
+    .populate('refugio', 'name address')
+    .sort({ [sort]: order === 'desc' ? -1 : 1 })
+    .skip(skip)
+    .limit(limit);
+};
+
+export const contarMascotas = (query) => {
+  return Mascota.countDocuments(query);
+};
