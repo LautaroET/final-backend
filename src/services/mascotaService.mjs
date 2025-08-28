@@ -1,4 +1,5 @@
 import MascotaRepository from '../repositories/MascotaRepository.mjs';
+import Mascota from '../models/Mascota.mjs';
 const repo = new MascotaRepository();
 
 export const obtenerMascotas = () => repo.obtenerTodos();
