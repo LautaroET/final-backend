@@ -8,7 +8,7 @@ const refugioSchema = new mongoose.Schema(
     email:           { type: String, required: true },
     website:         { type: String, required: true },
     capacity:        { type: Number, required: true, min: 0 },
-    image:           { type: String, required: true },
+    image:           { type: String },
     description:     { type: String, required: true },
     adoptionProcess: { type: String, required: true },
     creador:         { type: String, default: 'Tapia Lautaro' }

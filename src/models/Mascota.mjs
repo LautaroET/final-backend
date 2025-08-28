@@ -11,7 +11,7 @@ const mascotaSchema = new mongoose.Schema(
     status:      { type: String, enum: ['En adopción', 'Adoptado', 'Reservado'], default: 'En adopción' },
     description: { type: String, required: true },
     history:     { type: String },
-    images:      [{ type: String, required: true }],
+    images:      [{ type: String }],
     refugio:     { type: mongoose.Schema.Types.ObjectId, ref: 'Refugio', required: true },
     creador:     { type: String, default: 'Tapia Lautaro' }
   },
