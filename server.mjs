@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api', refugioRoutes);
 app.use('/api', mascotaRoutes);
-app.use('/api/usuarios', usuarioRoutes);
+app.use('/api', usuarioRoutes);
 app.use('/api', solicitudAdopcionRoutes);
 app.use('/api', solicitudDarEnAdopcionRoutes);
 
