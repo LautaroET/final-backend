@@ -8,6 +8,7 @@ const usuarioSchema = new mongoose.Schema(
         rol: { type: String, enum: ['adoptante', 'admin', 'refugio'], default: 'adoptante' },
         telefono: String,
         fechaRegistro: { type: Date, default: Date.now },
+        avatar: { type: String, required: true },
         creador: { type: String, default: 'Tapia Lautaro' }
     },
     { collection: 'usuarios' }

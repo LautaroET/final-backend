@@ -11,6 +11,7 @@ import solicitudDarEnAdopcionRoutes from './src/routes/solicitudDarEnAdopcion.mj
 import estadisticasRoutes from './src/routes/estadisticasRoutes.mjs';
 import uploadRoutes from './src/routes/uploadRoutes.mjs';
 import path from 'path';
+import imagenRoutes from './src/routes/imagenRoutes.mjs';
 
 dotenv.config();
 await connectDB();        // conecta a Mongo
@@ -30,6 +31,7 @@ app.use('/api', solicitudDarEnAdopcionRoutes);
 app.use('/api', estadisticasRoutes);
 app.use('/api', uploadRoutes);
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+app.use('/api', imagenRoutes);
 
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, '0.0.0.0', () =>
