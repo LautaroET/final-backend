@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import path from 'path';
 import { connectDB } from './src/config/dbConfig.mjs';
 import refugioRoutes from './src/routes/refugioRoutes.mjs';
 import mascotaRoutes from './src/routes/mascotaRoutes.mjs';
@@ -11,6 +10,7 @@ import solicitudAdopcionRoutes from './src/routes/solicitudAdopcion.mjs';
 import solicitudDarEnAdopcionRoutes from './src/routes/solicitudDarEnAdopcion.mjs';
 import estadisticasRoutes from './src/routes/estadisticasRoutes.mjs';
 import uploadRoutes from './src/routes/uploadRoutes.mjs';
+import path from 'path';
 
 dotenv.config();
 await connectDB();        // conecta a Mongo
@@ -29,7 +29,6 @@ app.use('/api', solicitudAdopcionRoutes);
 app.use('/api', solicitudDarEnAdopcionRoutes);
 app.use('/api', estadisticasRoutes);
 app.use('/api', uploadRoutes);
-
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 const PORT = process.env.PORT || 10000;

@@ -1,8 +1,10 @@
 import express from 'express';
 import upload from '../middlewares/upload.mjs';
+import path from 'path';
 
 const router = express.Router();
 
+// Subir imagen
 router.post('/upload', upload.single('image'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ mensaje: 'No se subió ninguna imagen' });
