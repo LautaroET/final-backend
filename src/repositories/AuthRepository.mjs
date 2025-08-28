@@ -15,3 +15,6 @@ export class AuthRepository {
     return await bcrypt.compare(raw, hash);
   }
 }
+async actualizarPassword(userId, hashedPassword) {
+  await Usuario.findByIdAndUpdate(userId, { password: hashedPassword });
+}
