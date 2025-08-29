@@ -7,21 +7,23 @@ export const obtenerMascotasController = async (req, res) => {
       limit = 10,
       sort = 'createdAt',
       order = 'asc',
-      ...filters
+      q // Agrega el parámetro 'q'
     } = req.query;
 
     const query = {};
 
-    // Filtros simples
-    if (filters.breed) query.breed = new RegExp(filters.breed, 'i');
-    if (filters.size) query.size = filters.size;
-    if (filters.gender) query.gender = filters.gender;
-    if (filters.status) query.status = filters.status;
-    if (filters.ageMin || filters.ageMax) {
-      query.age = {};
-      if (filters.ageMin) query.age.$gte = Number(filters.ageMin);
-      if (filters.ageMax) query.age.$lte = Number(filters.ageMax);
+    // Nuevo filtro para 'q'
+    if (q) {
+      query.$or = [
+        { name: new RegExp(q, 'i') },
+        { breed: new RegExp(q, 'i') },
+      ];
     }
+
+    // Filtros simples existentes
+    if (req.query.breed) query.breed = new RegExp(req.query.breed, 'i');
+    if (req.query.size) query.size = req.query.size;
+    // ... otros filtros
 
     const skip = (Number(page) - 1) * Number(limit);
 

@@ -3,11 +3,17 @@ import { enviarEmail } from '../services/emailService.mjs';
 import Refugio from '../models/Refugio.mjs';
 import Mascota from '../models/Mascota.mjs';
 
+// Crear nueva solicitud de adopción
 export const crearSolicitud = async (req, res) => {
   try {
     const nueva = await solicitudService.crearSolicitud(req.body);
-    const mascota = await Mascota.findById(nueva.mascota);
-    const refugio = await Refugio.findById(mascota.refugio);
+    const mascota = await Mascota.findById(nueva.mascota).populate('refugio');
+
+    if (!mascota || !mascota.refugio) {
+      return res.status(404).json({ mensaje: 'Mascota o refugio no encontrado' });
+    }
+
+    const refugio = mascota.refugio;
 
     if (refugio?.email) {
       await enviarEmail({
@@ -23,6 +29,7 @@ export const crearSolicitud = async (req, res) => {
   }
 };
 
+// Listar solicitudes por refugio
 export const listarPorRefugio = async (req, res) => {
   try {
     const solicitudes = await solicitudService.obtenerSolicitudesPorRefugio(req.params.refugioId);
@@ -32,13 +39,16 @@ export const listarPorRefugio = async (req, res) => {
   }
 };
 
+// Responder una solicitud
 export const responderSolicitud = async (req, res) => {
   try {
     const { estado, respuesta } = req.body;
     const actualizada = await solicitudService.actualizarEstado(req.params.id, estado, respuesta);
     if (!actualizada) return res.status(404).json({ mensaje: 'Solicitud no encontrada' });
 
-    const usuario = await import('../models/Usuario.mjs').then(m => m.default).then(Usuario => Usuario.findById(actualizada.usuario));
+    const Usuario = (await import('../models/Usuario.mjs')).default;
+    const usuario = await Usuario.findById(actualizada.usuario);
+
     if (usuario?.email) {
       await enviarEmail({
         to: usuario.email,
