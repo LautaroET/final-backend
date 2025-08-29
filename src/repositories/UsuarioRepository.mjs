@@ -3,11 +3,11 @@ import Usuario from '../models/Usuario.mjs';
 
 class UsuarioRepository extends IRepository {
     async obtenerTodos() {
-        return await Usuario.find({ creador: 'Tapia Lautaro' }).sort({ nombre: 1 });
+        return await Usuario.find().select('-password');
     }
 
     async obtenerPorId(id) {
-        return await Usuario.findById(id);
+        return await Usuario.findById(id).select('-password');
     }
 
     async crear(data) {
@@ -15,11 +15,15 @@ class UsuarioRepository extends IRepository {
     }
 
     async actualizarPorId(id, datos) {
-        return await Usuario.findByIdAndUpdate(id, datos, { new: true });
+        return await Usuario.findByIdAndUpdate(id, datos, { new: true }).select('-password');
     }
 
     async eliminarPorId(id) {
         return await Usuario.findByIdAndDelete(id);
+    }
+
+    async obtenerPorEmail(email) {
+        return await Usuario.findOne({ email });
     }
 }
 

@@ -11,7 +11,11 @@ const refugioSchema = new mongoose.Schema(
     image:           { type: String },
     description:     { type: String, required: true },
     adoptionProcess: { type: String, required: true },
-    creador:         { type: String, default: 'Tapia Lautaro' }
+    usuarioId:       {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Usuario',
+      required: true
+    }
   },
   { collection: 'refugios' }
 );

@@ -3,7 +3,7 @@ import Refugio from '../models/Refugio.mjs';
 
 class RefugioRepository extends IRepository {
     async obtenerTodos() {
-        return await Refugio.find({ creador: 'Tapia Lautaro' }).sort({ nombre: 1 });
+        return await Refugio.find();
     }
 
     async obtenerPorId(id) {

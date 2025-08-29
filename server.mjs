@@ -1,43 +1,34 @@
 import express from 'express';
-import cors from 'cors';
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
 import { connectDB } from './src/config/dbConfig.mjs';
 import refugioRoutes from './src/routes/refugioRoutes.mjs';
-import mascotaRoutes from './src/routes/mascotaRoutes.mjs';
-import usuarioRoutes from './src/routes/usuarioRoutes.mjs';
-import solicitudAdopcionRoutes from './src/routes/solicitudAdopcion.mjs';
-import solicitudDarEnAdopcionRoutes from './src/routes/solicitudDarEnAdopcion.mjs';
-import estadisticasRoutes from './src/routes/estadisticasRoutes.mjs';
-import uploadRoutes from './src/routes/uploadRoutes.mjs';
-import path from 'path';
-import imagenRoutes from './src/routes/imagenRoutes.mjs';
-import authRoutes from './src/routes/authRoutes.mjs';
-import comentarioRoutes from './src/routes/comentarioRoutes.mjs';
-
-dotenv.config();
-await connectDB();        // conecta a Mongo
+import mascotaRouter from './routes/mascotaRoutes.mjs';
+import usuarioRouter from './routes/usuarioRoutes.mjs';
+import solicitudRouter from './routes/solicitudRoutes.mjs';
+import solicitudDePublicacionRouter from './routes/solicitudDePublicacionRoutes.mjs';
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-// ↓↓↓ CORS después de crear la app ↓↓↓
-app.use(cors());          // permite cualquier origen
+// Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/api', refugioRoutes);
-app.use('/api', mascotaRoutes);
-app.use('/api', usuarioRoutes);
-app.use('/api', solicitudAdopcionRoutes);
-app.use('/api', solicitudDarEnAdopcionRoutes);
-app.use('/api', estadisticasRoutes);
-app.use('/api', uploadRoutes);
-app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
-app.use('/api', imagenRoutes);
-app.use('/api', authRoutes);
-app.use('/api', comentarioRoutes);
+// Conectar a BD
+connectDB();
 
-const PORT = process.env.PORT || 10000;
-app.listen(PORT, '0.0.0.0', () =>
-  console.log(`🐾 Servidor de Patitas al Rescate corriendo en puerto ${PORT}`)
-);
+// Rutas API
+app.use('/api', refugioRoutes);
+app.use('/api', mascotaRouter);
+app.use('/api', usuarioRouter);
+app.use('/api', solicitudRouter);
+app.use('/api', solicitudDePublicacionRouter);
+
+// Ruta 404 genérica
+app.use((req, res) => {
+  res.status(404).json({ mensaje: 'Ruta no encontrada' });
+});
+
+// Arrancar servidor
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Servidor corriendo en puerto ${PORT}`);
+});
