@@ -2,7 +2,6 @@ import express from 'express';
 import { connectDB } from './src/config/dbConfig.mjs';
 import refugioRoutes from './src/routes/refugioRoutes.mjs';
 import usuarioRouter from './src/routes/usuarioRoutes.mjs'
-import usuarioRouter from './routes/usuarioRoutes.mjs';
 import solicitudRouter from './routes/solicitudRoutes.mjs';
 import solicitudDePublicacionRouter from './routes/solicitudDePublicacionRoutes.mjs';
 
