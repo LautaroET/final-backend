@@ -8,7 +8,7 @@ import {
   obtenerSolicitudesPorRefugioController,
   obtenerSolicitudesPorUsuarioController
 } from '../controllers/solicitudController.mjs';
-import { solicitudValidationRules } from '../validators/solicitudValidator.mjs';
+import { solicitudValidationRules } from '../middleware/solicitudValidator.mjs';
 import { handleValidationErrors } from '../middleware/validationMiddleware.mjs';
 
 const router = express.Router();
