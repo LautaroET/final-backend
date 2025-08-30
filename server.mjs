@@ -1,5 +1,6 @@
 import express from 'express';
 import { connectDB } from './src/config/dbConfig.mjs';
+import cors from 'cors';
 import refugioRoutes from './src/routes/refugioRoutes.mjs';
 import mascotaRouter from './src/routes/mascotaRoutes.mjs';
 import usuarioRouter from './src/routes/usuarioRoutes.mjs'
@@ -16,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 // Conectar a BD
 connectDB();
 
+app.use(cors());
 // Rutas API
 app.use('/api', refugioRoutes);
 app.use('/api', mascotaRouter);
