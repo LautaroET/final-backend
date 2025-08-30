@@ -9,7 +9,7 @@ import {
   obtenerSolicitudesPorUsuarioController
 } from '../controllers/solicitudController.mjs';
 import { solicitudValidationRules } from '../middleware/solicitudValidator.mjs';
-import { handleValidationErrors } from '../middleware/validationMiddleware.mjs';
+import { handleValidationErrors } from '../middleware/errorMiddleware.mjs';
 
 const router = express.Router();
 

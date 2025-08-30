@@ -1,3 +1,4 @@
+import { body } from 'express-validator';
 import express from 'express';
 import {
     obtenerRefugiosController,

@@ -8,7 +8,7 @@ import {
   obtenerMascotasPorRefugioController
 } from '../controllers/mascotaController.mjs';
 import { mascotaValidationRules } from '../middleware/mascotaValidator.mjs';
-import { handleValidationErrors } from '../middleware/validationMiddleware.mjs';
+import { handleValidationErrors } from '../middleware/errorMiddleware.mjs';
 
 const router = express.Router();
 
