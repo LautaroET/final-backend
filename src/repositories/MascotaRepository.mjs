@@ -1,10 +1,24 @@
 import IRepository from './IRepository.mjs';
 import Mascota from '../models/Mascota.mjs';
+import { buildQuery } from '../../utils/paginate.js';
 
 class MascotaRepository extends IRepository {
-    async obtenerTodos() {
-        return await Mascota.find().populate('refugio', 'name address');
-    }
+    async obtenerTodos(filters = {}, options = {}) {
+    const { skip, limit, sort, filter } = buildQuery(filters, options);
+    const [data, total] = await Promise.all([
+      Mascota.find(filter).sort(sort).skip(skip).limit(limit).populate('refugio', 'name address'),
+      Mascota.countDocuments(filter)
+    ]);
+    return {
+      data,
+      pagination: {
+        currentPage: Number(options.page) || 1,
+        totalPages: Math.ceil(total / limit),
+        totalItems: total,
+        itemsPerPage: limit
+      }
+    };
+  }
 
     async obtenerPorId(id) {
         return await Mascota.findById(id).populate('refugio', 'name address');

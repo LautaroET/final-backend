@@ -1,7 +1,7 @@
 import SolicitudDePublicacionRepository from '../repositories/SolicitudDePublicacionRepository.mjs';
 const repo = new SolicitudDePublicacionRepository();
 
-export const obtenerSolicitudes = () => repo.obtenerTodos();
+export const obtenerSolicitudes = (filters, options) => repo.obtenerTodos(filters, options);
 export const crearSolicitud = (data) => repo.crear(data);
 export const obtenerSolicitudPorId = (id) => repo.obtenerPorId(id);
 export const actualizarSolicitud = (id, data) => repo.actualizarPorId(id, data);

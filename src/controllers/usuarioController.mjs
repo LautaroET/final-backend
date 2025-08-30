@@ -1,10 +1,12 @@
-// controllers/usuarioController.mjs
 import * as usuarioService from '../services/usuarioService.mjs';
 
 export async function obtenerUsuariosController(req, res) {
   try {
-    const usuarios = await usuarioService.obtenerUsuarios();
-    res.json(usuarios);
+    const { page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'desc', role } = req.query;
+    const filters = {};
+    if (role) filters.role = role;
+    const results = await usuarioService.obtenerUsuarios(filters, { page, limit, sortBy, sortOrder });
+    res.json(results);
   } catch (error) {
     res.status(500).json({ mensaje: 'Error al obtener usuarios', error: error.message });
   }

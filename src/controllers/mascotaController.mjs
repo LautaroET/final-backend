@@ -2,8 +2,12 @@ import * as mascotaService from '../services/mascotaService.mjs';
 
 export async function obtenerMascotasController(req, res) {
   try {
-    const mascotas = await mascotaService.obtenerMascotas();
-    res.json(mascotas);
+    const { page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'desc', species, size } = req.query;
+    const filters = {};
+    if (species) filters.species = { $regex: species, $options: 'i' };
+    if (size) filters.size = size;
+    const results = await mascotaService.obtenerMascotas(filters, { page, limit, sortBy, sortOrder });
+    res.json(results);
   } catch (error) {
     res.status(500).json({ mensaje: 'Error al obtener mascotas', error: error.message });
   }

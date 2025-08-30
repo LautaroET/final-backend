@@ -1,10 +1,24 @@
 import IRepository from './IRepository.mjs';
 import Usuario from '../models/Usuario.mjs';
+import { buildQuery } from '../../utils/paginate.js';
 
 class UsuarioRepository extends IRepository {
-    async obtenerTodos() {
-        return await Usuario.find().select('-password');
-    }
+    async obtenerTodos(filters = {}, options = {}) {
+    const { skip, limit, sort, filter } = buildQuery(filters, options);
+    const [data, total] = await Promise.all([
+      Usuario.find(filter).select('-password').sort(sort).skip(skip).limit(limit),
+      Usuario.countDocuments(filter)
+    ]);
+    return {
+      data,
+      pagination: {
+        currentPage: Number(options.page) || 1,
+        totalPages: Math.ceil(total / limit),
+        totalItems: total,
+        itemsPerPage: limit
+      }
+    };
+  }
 
     async obtenerPorId(id) {
         return await Usuario.findById(id).select('-password');

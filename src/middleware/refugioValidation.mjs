@@ -9,5 +9,4 @@ export const refugioValidationRules = () => [
   body('capacity').isInt({ min: 0 }).toInt().withMessage('Capacidad debe ser un entero positivo'),
   body('description').notEmpty().trim().escape().withMessage('La descripción es obligatoria'),
   body('adoptionProcess').notEmpty().trim().escape().withMessage('El proceso de adopción es obligatorio'),
-  body('creador').notEmpty().trim().escape().withMessage('El creador es obligatorio')
 ];

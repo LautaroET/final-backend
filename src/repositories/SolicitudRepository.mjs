@@ -1,14 +1,31 @@
 // repositories/SolicitudRepository.mjs
 import IRepository from './IRepository.mjs';
 import Solicitud from '../models/SolicitudDeAdopcion.mjs';
+import { buildQuery } from '../../utils/paginate.js';
 
 class SolicitudRepository extends IRepository {
-    async obtenerTodos() {
-        return await Solicitud.find()
-            .populate('usuario', 'username email')
-            .populate('mascota', 'name species age')
-            .populate('refugio', 'name address');
-    }
+    async obtenerTodos(filters = {}, options = {}) {
+    const { skip, limit, sort, filter } = buildQuery(filters, options);
+    const [data, total] = await Promise.all([
+      Solicitud.find(filter)
+        .populate('usuario', 'username email')
+        .populate('mascota', 'name species age')
+        .populate('refugio', 'name address')
+        .sort(sort)
+        .skip(skip)
+        .limit(limit),
+      Solicitud.countDocuments(filter)
+    ]);
+    return {
+      data,
+      pagination: {
+        currentPage: Number(options.page) || 1,
+        totalPages: Math.ceil(total / limit),
+        totalItems: total,
+        itemsPerPage: limit
+      }
+    };
+  }
 
     async obtenerPorId(id) {
         return await Solicitud.findById(id)

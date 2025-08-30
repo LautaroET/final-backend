@@ -2,8 +2,11 @@ import * as solicitudService from '../services/solicitudDePublicacionService.mjs
 
 export async function obtenerSolicitudesController(req, res) {
   try {
-    const solicitudes = await solicitudService.obtenerSolicitudes();
-    res.json(solicitudes);
+    const { page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'desc', estado } = req.query;
+    const filters = {};
+    if (estado) filters.estado = estado;
+    const results = await solicitudService.obtenerSolicitudes(filters, { page, limit, sortBy, sortOrder });
+    res.json(results);
   } catch (error) {
     res.status(500).json({ mensaje: 'Error al obtener solicitudes', error: error.message });
   }

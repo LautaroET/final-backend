@@ -1,12 +1,14 @@
 import * as refugioService from '../services/refugioService.mjs';
 
 export async function obtenerRefugiosController(req, res) {
-    try {
-        const refugios = await refugioService.obtenerRefugios();
-        res.json(refugios);
-    } catch (error) {
-        res.status(500).json({ mensaje: 'Error al obtener refugios', error: error.message });
-    }
+  try {
+    const { page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'desc', name } = req.query;
+    const filters = name ? { name: { $regex: name, $options: 'i' } } : {};
+    const results = await refugioService.obtenerRefugios(filters, { page, limit, sortBy, sortOrder });
+    res.json(results);
+  } catch (error) {
+    res.status(500).json({ mensaje: 'Error al obtener refugios', error: error.message });
+  }
 }
 
 export async function crearRefugioController(req, res) {
