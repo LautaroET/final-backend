@@ -2,8 +2,8 @@ import express from 'express';
 import { connectDB } from './src/config/dbConfig.mjs';
 import refugioRoutes from './src/routes/refugioRoutes.mjs';
 import usuarioRouter from './src/routes/usuarioRoutes.mjs'
-import solicitudRouter from './routes/solicitudRoutes.mjs';
-import solicitudDePublicacionRouter from './routes/solicitudDePublicacionRoutes.mjs';
+import solicitudRouter from './src/routes/solicitudRoutes.mjs';
+import solicitudDePublicacionRouter from './src/routes/solicitudDePublicacionRoutes.mjs';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
