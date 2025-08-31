@@ -15,23 +15,25 @@ import {authenticateToken} from '../middleware/authMiddleware.mjs'
 
 const router = express.Router();
 
-router.get('/',authenticateToken, obtenerSolicitudesController);
+router.get('/', authenticateToken, obtenerSolicitudesController);
 router.post(
-  '/solicitudes-publicacion',authenticateToken,
+  '/',
+  authenticateToken,
   solicitudDePublicacionValidationRules(),
   handleValidationErrors,
   crearSolicitudController
 );
-router.get('/solicitudes-publicacion/:id',authenticateToken, obtenerSolicitudPorIdController);
+router.get('/:id', authenticateToken, obtenerSolicitudPorIdController);
 router.put(
-  '/solicitudes-publicacion/:id/responder',authenticateToken,
+  '/:id/responder',
+  authenticateToken,
   body('estado').isIn(['aceptada', 'rechazada']).withMessage('Estado inválido'),
   body('respuesta').optional().trim().escape(),
   handleValidationErrors,
   responderSolicitudController
 );
-router.delete('/solicitudes-publicacion/:id',authenticateToken, eliminarSolicitudController);
-router.get('/refugios/:refugioId/solicitudes-publicacion',authenticateToken, obtenerSolicitudesPorRefugioController);
-router.get('/usuarios/:usuarioId/solicitudes-publicacion',authenticateToken, obtenerSolicitudesPorUsuarioController);
+router.delete('/:id', authenticateToken, eliminarSolicitudController);
+router.get('/refugios/:refugioId', authenticateToken, obtenerSolicitudesPorRefugioController);
+router.get('/usuarios/:usuarioId', authenticateToken, obtenerSolicitudesPorUsuarioController);
 
 export default router;

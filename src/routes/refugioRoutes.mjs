@@ -1,4 +1,3 @@
-// src/routes/refugioRoutes.mjs
 import express from 'express';
 import {
   obtenerRefugiosController,
@@ -14,13 +13,13 @@ import { authorizeRefugioOwner } from '../middleware/authorizeResourceOwner.mjs'
 
 const router = express.Router();
 
-// Público
+// Rutas públicas
 router.get('/', obtenerRefugiosController);
 router.get('/:id', obtenerRefugioPorIdController);
 
 // Solo usuarios con permiso "create_refugio" (refugio role)
 router.post(
-  '/refugios',
+  '/',
   authenticateToken,
   hasPermission('create_refugio'),
   refugioValidationRules(),
@@ -30,7 +29,7 @@ router.post(
 
 // Solo el dueño puede editar/eliminar su refugio
 router.put(
-  '/refugios/:id',
+  '/:id',
   authenticateToken,
   authorizeRefugioOwner,
   refugioValidationRules(),
@@ -39,7 +38,7 @@ router.put(
 );
 
 router.delete(
-  '/refugios/:id',
+  '/:id',
   authenticateToken,
   authorizeRefugioOwner,
   eliminarRefugioController

@@ -1,4 +1,3 @@
-// src/routes/mascotaRoutes.mjs
 import express from 'express';
 import {
   obtenerMascotasController,
@@ -15,13 +14,13 @@ import { authorizeRefugioOwner } from '../middleware/authorizeResourceOwner.mjs'
 
 const router = express.Router();
 
-// Público
+// Rutas públicas
 router.get('/', obtenerMascotasController);
 router.get('/:id', obtenerMascotaPorIdController);
 
 // Solo usuarios con permiso "create_mascota" (refugio role)
 router.post(
-  '/mascotas',
+  '/',
   authenticateToken,
   hasPermission('create_mascota'),
   mascotaValidationRules(),
@@ -31,7 +30,7 @@ router.post(
 
 // Solo el dueño del refugio puede editar/eliminar sus mascotas
 router.put(
-  '/mascotas/:id',
+  '/:id',
   authenticateToken,
   authorizeRefugioOwner,
   mascotaValidationRules(),
@@ -40,7 +39,7 @@ router.put(
 );
 
 router.delete(
-  '/mascotas/:id',
+  '/:id',
   authenticateToken,
   authorizeRefugioOwner,
   eliminarMascotaController
@@ -48,7 +47,7 @@ router.delete(
 
 // Solo refugio puede ver sus mascotas
 router.get(
-  '/refugios/:refugioId/mascotas',
+  '/refugios/:refugioId',
   authenticateToken,
   authorizeRefugioOwner,
   obtenerMascotasPorRefugioController

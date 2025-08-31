@@ -4,7 +4,9 @@
   "type": "module",
   "main": "server.mjs",
   "scripts": {
-    "dev": "node --watch server.mjs"
+    "dev": "node --watch server.mjs",
+    "seed": "node scripts/seedRolesAndPermissions.mjs",
+    "seed:massive": "node scripts/seedMassiveTestData.mjs"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",

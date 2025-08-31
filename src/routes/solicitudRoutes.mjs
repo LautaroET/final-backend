@@ -14,12 +14,12 @@ import {authenticateToken} from '../middleware/authMiddleware.mjs'
 
 const router = express.Router();
 
-router.get('/',authenticateToken, obtenerSolicitudesController);
-router.post('/solicitudes',authenticateToken, solicitudValidationRules(), handleValidationErrors, crearSolicitudController);
-router.get('/solicitudes/:id',authenticateToken, obtenerSolicitudPorIdController);
-router.put('/solicitudes/:id',authenticateToken, solicitudValidationRules(), handleValidationErrors, actualizarSolicitudController);
-router.delete('/solicitudes/:id',authenticateToken, eliminarSolicitudController);
-router.get('/refugios/:refugioId/solicitudes',authenticateToken, obtenerSolicitudesPorRefugioController);
-router.get('/usuarios/:usuarioId/solicitudes',authenticateToken, obtenerSolicitudesPorUsuarioController);
+router.get('/', authenticateToken, obtenerSolicitudesController);
+router.post('/', authenticateToken, solicitudValidationRules(), handleValidationErrors, crearSolicitudController);
+router.get('/:id', authenticateToken, obtenerSolicitudPorIdController);
+router.put('/:id', authenticateToken, solicitudValidationRules(), handleValidationErrors, actualizarSolicitudController);
+router.delete('/:id', authenticateToken, eliminarSolicitudController);
+router.get('/refugios/:refugioId', authenticateToken, obtenerSolicitudesPorRefugioController);
+router.get('/usuarios/:usuarioId', authenticateToken, obtenerSolicitudesPorUsuarioController);
 
 export default router;

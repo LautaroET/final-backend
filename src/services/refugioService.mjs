@@ -2,6 +2,7 @@
 import Refugio from '../models/Refugio.mjs';
 import RefugioRepository from '../repositories/RefugioRepository.mjs';
 import Usuario from '../models/Usuario.mjs'
+import Role from '../models/Role.mjs'
 
 const repo = new RefugioRepository();
 
