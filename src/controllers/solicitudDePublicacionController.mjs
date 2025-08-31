@@ -1,4 +1,7 @@
+// controllers/solicitudDePublicacionController.mjs
 import * as solicitudService from '../services/solicitudDePublicacionService.mjs';
+import Mascota from '../models/Mascota.mjs';
+import Refugio from '../models/Refugio.mjs';
 
 export async function obtenerSolicitudesController(req, res) {
   try {
@@ -14,6 +17,12 @@ export async function obtenerSolicitudesController(req, res) {
 
 export async function crearSolicitudController(req, res) {
   try {
+    // 1. Usuario-refugio no puede enviar solicitudes
+    const refugio = await Refugio.findOne({ usuarioId: req.user.id });
+    if (refugio) {
+      return res.status(403).json({ mensaje: 'Los refugios no pueden enviar solicitudes de publicación' });
+    }
+
     const nueva = await solicitudService.crearSolicitud(req.body);
     res.status(201).json(nueva);
   } catch (error) {
@@ -42,6 +51,15 @@ export async function responderSolicitudController(req, res) {
       respuesta
     });
     if (!actualizada) return res.status(404).json({ mensaje: 'Solicitud no encontrada' });
+
+    // 2. Si se acepta la solicitud crear la mascota en el refugio
+    if (estado === 'aceptada') {
+      await Mascota.create({
+        ...actualizada.mascota,
+        refugio: actualizada.refugio
+      });
+    }
+
     res.json(actualizada);
   } catch (error) {
     res.status(500).json({ mensaje: 'Error al responder solicitud', error: error.message });

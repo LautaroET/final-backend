@@ -15,7 +15,16 @@ export async function obtenerMascotasController(req, res) {
 
 export async function crearMascotaController(req, res) {
   try {
-    const nueva = await mascotaService.crearMascota(req.body);
+    const refugio = await Refugio.findOne({ usuarioId: req.user.id });
+    if (!refugio) {
+      return res.status(400).json({ mensaje: 'No tienes un refugio registrado' });
+    }
+
+    const nueva = await mascotaService.crearMascota({
+      ...req.body,
+      refugio: refugio._id,
+    });
+
     res.status(201).json(nueva);
   } catch (error) {
     res.status(500).json({ mensaje: 'Error al crear mascota', error: error.message });

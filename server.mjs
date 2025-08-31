@@ -1,36 +1,33 @@
 import express from 'express';
 import { connectDB } from './src/config/dbConfig.mjs';
 import cors from 'cors';
-import refugioRoutes from './src/routes/refugioRoutes.mjs';
-import mascotaRouter from './src/routes/mascotaRoutes.mjs';
-import usuarioRouter from './src/routes/usuarioRoutes.mjs'
-import solicitudRouter from './src/routes/solicitudRoutes.mjs';
-import solicitudDePublicacionRouter from './src/routes/solicitudDePublicacionRoutes.mjs';
+import dotenv from 'dotenv';
+import routes from './src/routes/index.mjs';
 
+dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middlewares
+connectDB();
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Conectar a BD
-connectDB();
+const corsOptions = {
+  origin: process.env.ALLOWED_ORIGINS?.split(',') || '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  maxAge: 86400
+};
 
-app.use(cors());
-// Rutas API
-app.use('/api', refugioRoutes);
-app.use('/api', mascotaRouter);
-app.use('/api', usuarioRouter);
-app.use('/api', solicitudRouter);
-app.use('/api', solicitudDePublicacionRouter);
+app.use(cors(corsOptions));
+app.use('/api', routes);
 
-// Ruta 404 genérica
 app.use((req, res) => {
   res.status(404).json({ mensaje: 'Ruta no encontrada' });
 });
 
-// Arrancar servidor
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Servidor corriendo en puerto ${PORT}`);
 });
