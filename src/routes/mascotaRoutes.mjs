@@ -48,9 +48,6 @@ router.delete(
 // Solo refugio puede ver sus mascotas
 router.get(
   '/refugios/:refugioId',
-  authenticateToken,
-  authorizeRefugioOwner,
-  obtenerMascotasPorRefugioController
 );
 
 export default router;
