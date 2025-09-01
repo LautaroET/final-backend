@@ -61,12 +61,12 @@ export async function eliminarMascotaController(req, res) {
   }
 }
 
-export async function obtenerMascotasPorRefugioController(req, res) {
-  try {
-    const { refugioId } = req.params;
-    const mascotas = await mascotaService.obtenerMascotasPorRefugio(refugioId);
-    res.json(mascotas);
-  } catch (error) {
-    res.status(500).json({ mensaje: 'Error al obtener mascotas del refugio', error: error.message });
-  }
-}
+  export async function obtenerMascotasPorRefugioController(req, res) {
+    try {
+        const { refugioId } = req.params;
+        const mascotas = await mascotaService.obtenerMascotasPorRefugio(refugioId);
+        res.json(mascotas); // Devolverá un array vacío si no encuentra nada
+        } catch (error) {
+      res.status(500).json({ mensaje: 'Error al obtener mascotas del refugio', error: error.message });
+      }
+    }
