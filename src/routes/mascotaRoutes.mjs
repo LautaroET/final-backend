@@ -13,10 +13,9 @@ const router = express.Router();
 // públicas
 router.get('/', listarMascotas);
 router.get('/:id', obtenerMascota);
-// protegidas
-router.use(authenticateToken);
-router.post('/', hasPermission('create:mascota'), crearMascota);
-router.put('/:id', hasPermission('update:mascota'), actualizarMascota);
-router.delete('/:id', hasPermission('delete:mascota'), eliminarMascota);
+
+router.post('/', crearMascota);
+router.put('/:id',  actualizarMascota);
+router.delete('/:id',eliminarMascota);
 
 export default router;

@@ -12,8 +12,8 @@ const router = express.Router();
 // públicas
 router.get('/', listarRefugios);
 // protegidas
-router.post('/', authenticateToken, crearRefugio);
-router.delete('/', authenticateToken, hasPermission('delete:refugio'), eliminarRefugio);
-router.get('/yo', authenticateToken, miRefugio);
+router.post('/', crearRefugio);
+router.delete('/', eliminarRefugio);
+router.get('/:id',  miRefugio);
 
 export default router;
