@@ -1,14 +1,14 @@
 import jwt from 'jsonwebtoken';
+import User from '../models/User.mjs'; // ¡Importar el modelo de usuario!
 
-exports.authenticateToken = (req, res, next) => {
-
+export const authenticateToken = (req, res, next) => {
     // Obtenemos el header de autorización
     const authHeader = req.headers['authorization'];
     // Extraemos el token del header (formato: "Bearer <token>")
     const token = authHeader && authHeader.split(' ')[1];
 
-      // Si no hay token, devolvemos error 401 (No autorizado)
-      if (!token) {
+    // Si no hay token, devolvemos error 401 (No autorizado)
+    if (!token) {
         return res.status(401).json({ message: 'Token no proporcionado' });
     }
 
@@ -23,12 +23,9 @@ exports.authenticateToken = (req, res, next) => {
         // Si el token es inválido, devolvemos error 403 (Prohibido)
         return res.status(403).json({ message: 'Token inválido' });
     }
-  
 };
 
-
-
-exports.hasPermission = (requiredPermission) => {
+export const hasPermission = (requiredPermission) => {
     return async (req, res, next) => {
         try {
             if (!req.user) {
@@ -43,7 +40,11 @@ exports.hasPermission = (requiredPermission) => {
                         path: 'permissions'
                     }
                 });
-                
+            
+            // Si el usuario o el rol no existen, prohibimos el acceso
+            if (!user || !user.role) {
+                return res.status(403).json({ message: 'Rol o usuario no encontrado' });
+            }
 
             const hasPermission = user.role.permissions.some(
                 permission => permission.name === requiredPermission
