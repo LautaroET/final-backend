@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import routes from './src/routes/index.mjs';
+import swaggerDocs from './src/docs/swagger.mjs';
 
     dotenv.config();
     const app = express();
@@ -24,6 +25,7 @@ import routes from './src/routes/index.mjs';
 
     /* ---------- Routes ---------- */
 app.use('/api', routes);
+swaggerDocs(app);
 
     /* ---------- Health checks ---------- */
     app.get('/health', (_req, res) => res.json({ status: 'OK', timestamp: new Date() }));
