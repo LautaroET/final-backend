@@ -29,26 +29,34 @@ export const authenticateToken = async (req, res, next) => {
 export const hasPermission = (requiredPermission) => {
     return async (req, res, next) => {
         try {
-        if (!req.user) {
-            return res.status(401).json({ message: 'No autenticado' });
-        }
+            if (!req.user) {
+                return res.status(401).json({ message: 'No autenticado' });
+            }
 
-        const role = await RoleRepository.findById(req.user.role);
-        if (!role) {
-            return res.status(403).json({ message: 'Rol no encontrado' });
-        }
+            console.log('Permiso requerido:', requiredPermission); // Log 1: qué permiso se necesita
+            console.log('ID del rol del usuario:', req.user.role); // Log 2: ID del rol en el token
 
-        const has = role.permissions.some(
-            (perm) => perm.name === requiredPermission
-        );
+            const role = await RoleRepository.findById(req.user.role);
+            if (!role) {
+                return res.status(403).json({ message: 'Rol no encontrado' });
+            }
+            
+            console.log('Rol encontrado:', role.name); // Log 3: nombre del rol
+            console.log('Permisos del rol:', role.permissions); // Log 4: permisos cargados desde la DB
 
-        if (!has) {
-            return res.status(403).json({ message: 'No tienes permiso para realizar esta acción' });
-        }
+            const has = role.permissions.some(
+                (perm) => perm.name === requiredPermission
+            );
 
-        next();
+            console.log('¿Tiene el permiso?', has); // Log 5: resultado final de la comprobación
+
+            if (!has) {
+                return res.status(403).json({ message: 'No tienes permiso para realizar esta acción' });
+            }
+
+            next();
         } catch (err) {
-        res.status(500).json({ message: 'Error en el servidor' });
+            res.status(500).json({ message: 'Error en el servidor' });
         }
     };
 };
