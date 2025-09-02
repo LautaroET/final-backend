@@ -23,7 +23,7 @@ import routes from './src/routes/index.mjs';
     app.use(express.json());
 
     /* ---------- Routes ---------- */
-    app.use('/api', routes);
+app.use('/api', routes);
 
     /* ---------- Health checks ---------- */
     app.get('/health', (_req, res) => res.json({ status: 'OK', timestamp: new Date() }));

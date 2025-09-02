@@ -1,3 +1,4 @@
+// scripts/seedRoles.mjs
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import Permission from '../src/models/Permission.mjs';
@@ -5,79 +6,60 @@ import Role from '../src/models/Role.mjs';
 
 dotenv.config();
 
-const permissionsData = [
-  { name: 'read:refugios', description: 'Ver lista de refugios' },
-  { name: 'read:mascotas', description: 'Ver lista de mascotas' },
-  { name: 'create:refugio', description: 'Crear un refugio (solo 1)' },
-  { name: 'update:refugio', description: 'Actualizar su propio refugio' },
-  { name: 'delete:refugio', description: 'Eliminar su propio refugio' },
-  { name: 'create:mascota', description: 'Agregar mascota a su refugio' },
-  { name: 'update:mascota', description: 'Modificar mascota de su refugio' },
-  { name: 'delete:mascota', description: 'Eliminar mascota de su refugio' }
-];
-
-const rolesData = [
-  {
-    name: 'comun',
-    description: 'Usuario sin refugio – solo puede ver refugios y mascotas',
-    permissions: ['read:refugios', 'read:mascotas', 'create:refugio']
-  },
-  {
-    name: 'refugio',
-    description: 'Usuario con refugio – puede gestionar su refugio y mascotas',
-    permissions: [
-      'read:refugios',
-      'read:mascotas',
-      'update:refugio',
-      'delete:refugio',
-      'create:mascota',
-      'update:mascota',
-      'delete:mascota'
-    ]
-  },
-  {
-    name: 'admin',
-    description: 'Administrador total',
-    permissions: [
-      'read:refugios',
-      'read:mascotas',
-      'create:refugio',
-      'update:refugio',
-      'delete:refugio',
-      'create:mascota',
-      'update:mascota',
-      'delete:mascota'
-    ]
-  }
-];
-
-async function seed() {
+const seedRoles = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    console.log('✅ Conectado a MongoDB');
 
-    await Permission.deleteMany({});
-    await Role.deleteMany({});
-    console.log('🗑️ Colecciones limpiadas');
+    // Permisos
+    const permissionsData = [
+      { name: 'read:mascotas', description: 'Ver mascotas' },
+      { name: 'write:mascotas', description: 'Crear/Editar mascotas' },
+      { name: 'delete:mascotas', description: 'Eliminar mascotas' },
+      { name: 'read:refugios', description: 'Ver refugios' },
+      { name: 'write:refugios', description: 'Crear/Editar refugios' },
+      { name: 'delete:refugios', description: 'Eliminar refugios' },
+      { name: 'admin:all', description: 'Acceso total' }
+    ];
 
-    const createdPerms = await Permission.insertMany(permissionsData);
-    const permMap = Object.fromEntries(createdPerms.map(p => [p.name, p._id]));
+    const permissions = await Permission.insertMany(
+      permissionsData.map(p => ({ ...p, _id: new mongoose.Types.ObjectId() })),
+      { ordered: false }
+    ).catch(() => Permission.find()); // si ya existen, traerlos
 
-    for (const role of rolesData) {
-      const permIds = role.permissions.map(name => permMap[name]);
-      await Role.create({
-        name: role.name,
-        description: role.description,
-        permissions: permIds
-      });
+    // Roles
+    const rolesData = [
+      { name: 'comun', description: 'Usuario común' },
+      { name: 'refugio', description: 'Dueño de refugio' },
+      { name: 'admin', description: 'Administrador del sistema' }
+    ];
+
+    for (const r of rolesData) {
+      let role = await Role.findOne({ name: r.name });
+      if (!role) {
+        role = new Role(r);
+        switch (r.name) {
+          case 'comun':
+            role.permissions = permissions.filter(p => p.name === 'read:mascotas');
+            break;
+          case 'refugio':
+            role.permissions = permissions.filter(p =>
+              ['read:mascotas', 'write:mascotas', 'delete:mascotas', 'read:refugios', 'write:refugios', 'delete:refugios'].includes(p.name)
+            );
+            break;
+          case 'admin':
+            role.permissions = permissions;
+            break;
+        }
+        await role.save();
+      }
     }
 
     console.log('✅ Roles y permisos creados');
+    process.exit(0);
   } catch (err) {
-    console.error('❌ Error en seed:', err);
-  } finally {
-    await mongoose.disconnect();
+    console.error('❌ Error al seedear roles:', err);
+    process.exit(1);
   }
-}
+};
 
-seed();
+seedRoles();
