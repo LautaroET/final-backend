@@ -12,7 +12,7 @@ const router = express.Router();
 // públicas
 router.get('/', listarRefugios);
 // protegidas
-router.post('/', authenticateToken, crearRefugio);
+router.post('/', authenticateToken,hasPermission, crearRefugio);
 router.delete('/', authenticateToken, hasPermission('delete:refugio'), eliminarRefugio);
 router.get('/yo', authenticateToken, miRefugio);
 

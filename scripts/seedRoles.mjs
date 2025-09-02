@@ -6,11 +6,8 @@ import Role from '../src/models/Role.mjs';
 dotenv.config();
 
 const permissionsData = [
-  // Públicos
   { name: 'read:refugios', description: 'Ver lista de refugios' },
   { name: 'read:mascotas', description: 'Ver lista de mascotas' },
-
-  // Usuario refugio (solo su refugio y mascotas)
   { name: 'create:refugio', description: 'Crear un refugio (solo 1)' },
   { name: 'update:refugio', description: 'Actualizar su propio refugio' },
   { name: 'delete:refugio', description: 'Eliminar su propio refugio' },
