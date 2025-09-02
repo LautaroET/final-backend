@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import Role from '../src/models/Role.mjs';
+import Role from '../models/Role.mjs';
 
 export const authenticateToken = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
