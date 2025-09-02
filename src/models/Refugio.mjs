@@ -2,22 +2,18 @@ import mongoose from 'mongoose';
 
 const refugioSchema = new mongoose.Schema(
   {
-    name:            { type: String, required: true },
-    address:         { type: String, required: true },
-    phone:           { type: String, required: true },
-    email:           { type: String, required: true },
-    website:         { type: String, required: true },
-    capacity:        { type: Number, required: true, min: 0 },
-    image:           { type: String },
-    description:     { type: String, required: true },
-    adoptionProcess: { type: String, required: true },
-    usuarioId:       {
+    nombre: { type: String, required: true },
+    direccion: { type: String, required: true },
+    telefono: { type: String, required: true },
+    email: { type: String, unique: true },
+    descripcion: { type: String },
+    usuario: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Usuario',
-      required: true
+      ref: 'User',
+      unique: true
     }
   },
-  { collection: 'refugios' }
+  { timestamps: true }
 );
 
-export default mongoose.models.Refugio || mongoose.model('Refugio', refugioSchema);
+export default mongoose.model('Refugio', refugioSchema);

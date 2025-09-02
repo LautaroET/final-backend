@@ -1,23 +1,25 @@
 {
-  "name": "patitas-backend",
+  "name": "patitas-al-rescate-backend",
   "version": "1.0.0",
+  "description": "Backend para la plataforma Patitas al Rescate – adopción de mascotas",
   "type": "module",
   "main": "server.mjs",
   "scripts": {
-    "dev": "node --watch server.mjs",
-    "seed": "node scripts/seedRolesAndPermissions.mjs",
-    "seed:massive": "node scripts/seedMassiveTestData.mjs"
+    "dev": "node server.mjs",
+    "seed": "node scripts/seedRoles.mjs"
   },
+  "keywords": ["adopcion", "mascotas", "refugios", "nodejs", "express", "mongodb"],
+  "author": "Tu nombre",
+  "license": "MIT",
   "dependencies": {
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "express": "^4.21.1",
-    "express-validator": "^7.2.0",
+    "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.8.3"
+    "mongoose": "^8.6.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.4"
   }
 }

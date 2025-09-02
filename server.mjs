@@ -1,25 +1,51 @@
-// server.mjs
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { connectDB } from './config/db.mjs';
-import router from './src/routes/index.mjs';
+import mongoose from 'mongoose';
+import routes from './src/routes/index.mjs';
 
-dotenv.config();
-const app = express();
-const PORT = process.env.PORT || 4000;
+    dotenv.config();
+    const app = express();
 
-// Middlewares
-app.use(cors());
-app.use(express.json());
+    /* ---------- Config ---------- */
+    const PORT = process.env.PORT || 3000;
 
-// Rutas
-app.use('/api', router);
+    const corsOptions = {
+    origin: process.env.ALLOWED_ORIGINS?.split(',') || '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    maxAge: 86400
+    };
 
-// Conectar a MongoDB
-connectDB();
+    /* ---------- Middleware ---------- */
+    app.use(cors(corsOptions));
+    app.use(express.json());
 
-// Levantar servidor
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-});
+    /* ---------- Routes ---------- */
+    app.use('/api', routes);
+
+    /* ---------- Health checks ---------- */
+    app.get('/health', (_req, res) => res.json({ status: 'OK', timestamp: new Date() }));
+    app.get('/', (_req, res) => res.json({ message: 'API funcionando – Patitas al Rescate' }));
+
+    /* ---------- DB + Server start ---------- */
+    mongoose
+    .connect(process.env.MONGO_URI)
+    .then(() => {
+        console.log('✅ MongoDB conectado – Patitas al Rescate');
+        app.listen(PORT, () => {
+        console.log(`✅ Servidor corriendo en puerto ${PORT}`);
+        console.log(`🌍 Accede en: http://localhost:${PORT}`);
+        });
+    })
+    .catch((err) => {
+        console.error('❌ Error conectando MongoDB:', err.message);
+        process.exit(1);
+    });
+
+    /* ---------- Manejo de errores no capturados ---------- */
+    process.on('unhandledRejection', (err) => {
+    console.error('Error no manejado:', err);
+    process.exit(1);
+    });

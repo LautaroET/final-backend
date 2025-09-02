@@ -1,22 +1,24 @@
 import mongoose from 'mongoose';
 
 const mascotaSchema = new mongoose.Schema(
-  {
-    name: { type: String, required: true },
-    species: { type: String, required: true }, // perro, gato, etc.
-    age: { type: Number, min: 0 },
-    size: { type: String, enum: ['pequeño', 'mediano', 'grande'] },
-    sex: { type: String, enum: ['macho', 'hembra'] },
-    description: { type: String },
-    image: { type: String },
-    isAdopted: { type: Boolean, default: false },
-    refugio: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Refugio',
-      required: true
-    }
-  },
-  { collection: 'mascotas' }
+    {
+        nombre: { type: String, required: true },
+        especie: { type: String, required: true },
+        edad: { type: Number, min: 0 },
+        estado: {
+        type: String,
+        enum: ['disponible', 'en proceso', 'adoptado'],
+        default: 'disponible'
+        },
+        refugio: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Refugio',
+        required: true
+        },
+        descripcion: String,
+        imagen: String
+    },
+    { timestamps: true }
 );
 
-export default mongoose.models.Mascota || mongoose.model('Mascota', mascotaSchema);
+export default mongoose.model('Mascota', mascotaSchema);

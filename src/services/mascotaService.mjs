@@ -1,9 +1,46 @@
 import MascotaRepository from '../repositories/MascotaRepository.mjs';
-const repo = new MascotaRepository();
+import RefugioRepository from '../repositories/RefugioRepository.mjs';
 
-export const obtenerMascotas = (filters, options) => repo.obtenerTodos(filters, options);
-export const crearMascota = (data) => repo.crear(data);
-export const obtenerMascotaPorId = (id) => repo.obtenerPorId(id);
-export const actualizarMascota = (id, data) => repo.actualizarPorId(id, data);
-export const eliminarMascota = (id) => repo.eliminarPorId(id);
-export const obtenerMascotasPorRefugio = (refugioId) => repo.obtenerPorRefugio(refugioId);
+class MascotaService {
+  async listarMascotas(refugioId = null) {
+    if (refugioId) {
+      return await MascotaRepository.findByRefugio(refugioId);
+    }
+    return await MascotaRepository.findAll();
+  }
+
+  async obtenerMascota(id) {
+    const mascota = await MascotaRepository.findById(id);
+    if (!mascota) throw new Error('Mascota no encontrada');
+    return mascota;
+  }
+
+  async crearMascota(data, userId) {
+    const refugio = await RefugioRepository.findByUsuario(userId);
+    if (!refugio) throw new Error('No tienes un refugio registrado');
+
+    return await MascotaRepository.create({ ...data, refugio: refugio._id });
+  }
+
+  async actualizarMascota(id, data, userId) {
+    const refugio = await RefugioRepository.findByUsuario(userId);
+    const mascota = await MascotaRepository.findById(id);
+    if (!mascota || mascota.refugio.toString() !== refugio._id.toString()) {
+      throw new Error('No autorizado para actualizar esta mascota');
+    }
+
+    return await MascotaRepository.update(id, data);
+  }
+
+  async eliminarMascota(id, userId) {
+    const refugio = await RefugioRepository.findByUsuario(userId);
+    const mascota = await MascotaRepository.findById(id);
+    if (!mascota || mascota.refugio.toString() !== refugio._id.toString()) {
+      throw new Error('No autorizado para eliminar esta mascota');
+    }
+
+    return await MascotaRepository.delete(id);
+  }
+}
+
+export default new MascotaService();

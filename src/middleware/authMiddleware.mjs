@@ -1,43 +1,54 @@
 import jwt from 'jsonwebtoken';
-import Usuario from '../models/Usuario.mjs';
+import UserRepository from '../repositories/UserRepository.mjs';
+import RoleRepository from '../repositories/RoleRepository.mjs';
 
-export const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+// Middleware para verificar el token JWT
+export const authenticateToken = async (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
 
-  if (!token) {
-    return res.status(401).json({ message: 'Token no proporcionado' });
-  }
+    if (!token) {
+        return res.status(401).json({ message: 'Token no proporcionado' });
+    }
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch (error) {
-    return res.status(403).json({ message: 'Token inválido' });
-  }
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await UserRepository.findById(decoded.id);
+        if (!user) {
+        return res.status(401).json({ message: 'Usuario no encontrado' });
+        }
+
+        req.user = { id: user._id, role: user.role, tipo: user.tipo };
+        next();
+    } catch (err) {
+        return res.status(403).json({ message: 'Token inválido' });
+    }
 };
 
+// Middleware para verificar permisos según el rol del usuario
 export const hasPermission = (requiredPermission) => {
-  return async (req, res, next) => {
-    try {
-      if (!req.user) {
-        return res.status(401).json({ message: 'No autenticado' });
-      }
+    return async (req, res, next) => {
+        try {
+        if (!req.user) {
+            return res.status(401).json({ message: 'No autenticado' });
+        }
 
-      const user = await Usuario.findById(req.user.id).populate({
-        path: 'role',
-        populate: { path: 'permissions' }
-      });
+        const role = await RoleRepository.findById(req.user.role);
+        if (!role) {
+            return res.status(403).json({ message: 'Rol no encontrado' });
+        }
 
-      const permissions = user.role.permissions.map(p => p.name);
-      if (!permissions.includes(requiredPermission) && !permissions.includes('manage_all')) {
-        return res.status(403).json({ message: 'Permiso denegado' });
-      }
+        const has = role.permissions.some(
+            (perm) => perm.name === requiredPermission
+        );
 
-      next();
-    } catch (error) {
-      res.status(500).json({ message: 'Error al verificar permisos' });
-    }
-  };
+        if (!has) {
+            return res.status(403).json({ message: 'No tienes permiso para realizar esta acción' });
+        }
+
+        next();
+        } catch (err) {
+        res.status(500).json({ message: 'Error en el servidor' });
+        }
+    };
 };

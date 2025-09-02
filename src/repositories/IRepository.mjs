@@ -1,9 +1,26 @@
-class IRepository {
-    async obtenerTodos() { throw new Error("Método 'obtenerTodos()' no implementado"); }
-    async obtenerPorId(id) { throw new Error("Método 'obtenerPorId()' no implementado"); }
-    async crear(data) { throw new Error("Método 'crear()' no implementado"); }
-    async actualizarPorId(id, datos) { throw new Error("Método 'actualizarPorId()' no implementado"); }
-    async eliminarPorId(id) { throw new Error("Método 'eliminarPorId()' no implementado"); }
-}
+export default class IRepository {
+  constructor(model) {
+    this.model = model;
+  }
 
-export default IRepository;
+  async findAll(filter = {}, options = {}) {
+    return this.model.find(filter).setOptions(options);
+  }
+
+  async findById(id) {
+    return this.model.findById(id);
+  }
+
+  async create(data) {
+    const doc = new this.model(data);
+    return doc.save();
+  }
+
+  async update(id, data) {
+    return this.model.findByIdAndUpdate(id, data, { new: true });
+  }
+
+  async delete(id) {
+    return this.model.findByIdAndDelete(id);
+  }
+}

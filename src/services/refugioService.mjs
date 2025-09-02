@@ -1,25 +1,47 @@
-// src/services/refugioService.mjs
-import Refugio from '../models/Refugio.mjs';
 import RefugioRepository from '../repositories/RefugioRepository.mjs';
-import Usuario from '../models/Usuario.mjs'
-import Role from '../models/Role.mjs'
+import UserRepository from '../repositories/UserRepository.mjs';
+import RoleRepository from '../repositories/RoleRepository.mjs';
 
-const repo = new RefugioRepository();
+class RefugioService {
+    async crearRefugio(data, userId) {
+        const user = await UserRepository.findById(userId);
+        if (!user || user.tipo !== 'comun') {
+        throw new Error('Solo usuarios comunes pueden crear un refugio');
+        }
 
-export const obtenerRefugios = (filters, options) => repo.obtenerTodos(filters, options);
-export const obtenerRefugioPorId = (id) => repo.obtenerPorId(id);
+        if (await RefugioRepository.findByUsuario(userId)) {
+        throw new Error('Ya tienes un refugio registrado');
+        }
 
-export const crearRefugio = async (data) => {
-  const { usuarioId } = data;
-  const existing = await Refugio.findOne({ usuarioId });
-  const refugioRole = await Role.findOne({ name: 'refugio' });
-  if (!refugioRole) throw new Error('Rol "refugio" no encontrado');
-  await Usuario.findByIdAndUpdate(usuarioId, { role: refugioRole._id });
-  if (existing) {
-    throw new Error('Ya tienes un refugio registrado');
-  }
-  return await repo.crear(data);
-};
+        const refugio = await RefugioRepository.create({ ...data, usuario: userId });
 
-export const actualizarRefugio = (id, data) => repo.actualizarPorId(id, data);
-export const eliminarRefugio = (id) => repo.eliminarPorId(id);
+        const refugioRole = await RoleRepository.findByName('refugio');
+        user.role = refugioRole._id;
+        user.tipo = 'refugio';
+        await UserRepository.update(user._id, { role: refugioRole._id, tipo: 'refugio' });
+
+        return refugio;
+    }
+
+    async eliminarRefugio(userId) {
+        const refugio = await RefugioRepository.findByUsuario(userId);
+        if (!refugio) throw new Error('No tienes un refugio asociado');
+
+        await RefugioRepository.delete(refugio._id);
+
+        const comunRole = await RoleRepository.findByName('comun');
+        await UserRepository.update(userId, { role: comunRole._id, tipo: 'comun' });
+
+        return { message: 'Refugio eliminado y usuario vuelto a común' };
+    }
+
+    async listarRefugios() {
+        return await RefugioRepository.findAll({}, { populate: 'usuario' });
+    }
+
+    async obtenerRefugioPorUsuario(userId) {
+        return await RefugioRepository.findByUsuario(userId);
+    }
+    }
+
+export default new RefugioService();
