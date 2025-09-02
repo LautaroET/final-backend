@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
-import User from '../models/User.mjs'; // ¡Importar el modelo de usuario!
+import User from '../models/User.mjs';
+import Role from '../models/Role.mjs';
 
 export const authenticateToken = (req, res, next) => {
     // Obtenemos el header de autorización
