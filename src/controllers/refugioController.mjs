@@ -36,3 +36,27 @@ export const miRefugio = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+export const obtenerRefugioPorId = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Validar que el ID sea un ObjectId válido de MongoDB
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({ message: 'ID de refugio inválido' });
+    }
+
+    const refugio = await Refugio.findById(id)
+      .populate('usuario', 'username email')
+      .select('-__v');
+
+    if (!refugio) {
+      return res.status(404).json({ message: 'Refugio no encontrado' });
+    }
+
+    res.status(200).json(refugio);
+  } catch (error) {
+    console.error('Error al obtener refugio:', error);
+    res.status(500).json({ message: 'Error al obtener el refugio' });
+  }
+};
