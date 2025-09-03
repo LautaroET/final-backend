@@ -6,7 +6,6 @@ class SolicitudAdopcionRepository extends IRepository {
     super(SolicitudAdopcion);
   }
 
-  // Obtener todas las solicitudes de adopción de un refugio específico
   async findByRefugio(refugioId) {
     return this.model
       .find({ refugio: refugioId })
@@ -14,7 +13,6 @@ class SolicitudAdopcionRepository extends IRepository {
       .populate('mascota', 'nombre especie edad imagen');
   }
 
-  // Obtener todas las solicitudes de adopción de un usuario específico
   async findByUsuario(usuarioId) {
     return this.model
       .find({ usuario: usuarioId })
@@ -22,7 +20,6 @@ class SolicitudAdopcionRepository extends IRepository {
       .populate('refugio', 'nombre email');
   }
 
-  // Verificar si ya existe una solicitud para esta mascota y usuario
   async existeSolicitud(usuarioId, mascotaId) {
     return this.model.findOne({ usuario: usuarioId, mascota: mascotaId });
   }

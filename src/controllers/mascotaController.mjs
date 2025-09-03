@@ -1,51 +1,47 @@
 import mascotaService from '../services/mascotaService.mjs';
 
-export const listarMascotas = async (req, res) => {
+export const listarMascotas = async (req, res, next) => {
   try {
     const refugioId = req.query.refugio;
     const mascotas = await mascotaService.listarMascotas(refugioId);
     res.json(mascotas);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    next(err);
   }
 };
 
-export const obtenerMascota = async (req, res) => {
+export const obtenerMascota = async (req, res, next) => {
   try {
     const mascota = await mascotaService.obtenerMascota(req.params.id);
     res.json(mascota);
   } catch (err) {
-    res.status(404).json({ message: err.message });
+    next(err);
   }
 };
 
-export const crearMascota = async (req, res) => {
+export const crearMascota = async (req, res, next) => {
   try {
     const mascota = await mascotaService.crearMascota(req.body, req.user.id);
     res.status(201).json(mascota);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    next(err);
   }
 };
 
-export const actualizarMascota = async (req, res) => {
+export const actualizarMascota = async (req, res, next) => {
   try {
-    const mascota = await mascotaService.actualizarMascota(
-      req.params.id,
-      req.body,
-      req.user.id
-    );
+    const mascota = await mascotaService.actualizarMascota(req.params.id, req.body, req.user.id);
     res.json(mascota);
   } catch (err) {
-    res.status(403).json({ message: err.message });
+    next(err);
   }
 };
 
-export const eliminarMascota = async (req, res) => {
+export const eliminarMascota = async (req, res, next) => {
   try {
     await mascotaService.eliminarMascota(req.params.id, req.user.id);
     res.json({ message: 'Mascota eliminada' });
   } catch (err) {
-    res.status(403).json({ message: err.message });
+    next(err);
   }
 };

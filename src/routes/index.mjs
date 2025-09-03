@@ -1,4 +1,3 @@
-// src/routes/index.mjs
 import express from 'express';
 import authRoutes from './authRoutes.mjs';
 import refugioRoutes from './refugioRoutes.mjs';

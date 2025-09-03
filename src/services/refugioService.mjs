@@ -5,13 +5,10 @@ import RoleRepository from '../repositories/RoleRepository.mjs';
 class RefugioService {
     async crearRefugio(data, userId) {
         const user = await UserRepository.findById(userId);
-        if (!user || user.tipo !== 'comun') {
-        throw new Error('Solo usuarios comunes pueden crear un refugio');
-        }
+        if (!user || user.tipo !== 'comun') throw new Error('Solo usuarios comunes pueden crear refugio');
 
-        if (await RefugioRepository.findByUsuario(userId)) {
+        if (await RefugioRepository.findByUsuario(userId))
         throw new Error('Ya tienes un refugio registrado');
-        }
 
         const refugio = await RefugioRepository.create({ ...data, usuario: userId });
 

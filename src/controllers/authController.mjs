@@ -1,20 +1,20 @@
 import authService from '../services/authService.mjs';
 
-export const register = async (req, res) => {
+export const register = async (req, res, next) => {
     try {
         const result = await authService.register(req.body);
         res.status(201).json(result);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        next(error);
     }
     };
 
-    export const login = async (req, res) => {
+    export const login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
         const result = await authService.login(email, password);
         res.json(result);
     } catch (error) {
-        res.status(401).json({ message: error.message });
+        next(error);
     }
 };

@@ -49,10 +49,10 @@ class AuthService {
 
     generateToken(user) {
         return jwt.sign(
-            { id: user._id, role: user.role, tipo: user.tipo },
-            process.env.JWT_SECRET,
-            { expiresIn: '24h' }
-            );
+        { id: user._id, role: user.role, tipo: user.tipo },
+        process.env.JWT_SECRET,
+        { expiresIn: '24h' }
+        );
     }
     }
 

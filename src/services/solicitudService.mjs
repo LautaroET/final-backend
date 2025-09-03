@@ -4,8 +4,6 @@ import MascotaRepository from '../repositories/MascotaRepository.mjs';
 import RefugioRepository from '../repositories/RefugioRepository.mjs';
 
 class SolicitudService {
-  /* ---------- SOLICITUDES DE ADOPCIÓN ---------- */
-
   async crearSolicitudAdopcion({ usuarioId, mascotaId, mensaje }) {
     const mascota = await MascotaRepository.findById(mascotaId);
     if (!mascota) throw new Error('Mascota no encontrada');
@@ -32,26 +30,17 @@ class SolicitudService {
   async cambiarEstadoSolicitudAdopcion(solicitudId, nuevoEstado, refugioId) {
     const solicitud = await SolicitudAdopcionRepository.findById(solicitudId);
     if (!solicitud) throw new Error('Solicitud no encontrada');
-
-    if (solicitud.refugio.toString() !== refugioId) {
-      throw new Error('No autorizado para modificar esta solicitud');
-    }
-
-    if (!['aceptada', 'rechazada'].includes(nuevoEstado)) {
-      throw new Error('Estado inválido');
-    }
+    if (solicitud.refugio.toString() !== refugioId) throw new Error('No autorizado');
+    if (!['aceptada', 'rechazada'].includes(nuevoEstado)) throw new Error('Estado inválido');
 
     const updated = await SolicitudAdopcionRepository.update(solicitudId, { estado: nuevoEstado });
 
-    // Si se acepta, actualizar estado de la mascota
     if (nuevoEstado === 'aceptada') {
-      await MascotaRepository.update(solicitud.mascota, { estado: 'en adopción' });
+      await MascotaRepository.update(solicitud.mascota, { estado: 'en proceso de adopción' });
     }
 
     return updated;
   }
-
-  /* ---------- SOLICITUDES PARA DAR EN ADOPCIÓN ---------- */
 
   async crearSolicitudDarEnAdopcion({ usuarioId, refugioId, datosMascota, mensaje }) {
     const yaExiste = await SolicitudDarEnAdopcionRepository.existeSolicitudPendiente(usuarioId, refugioId);
@@ -61,7 +50,7 @@ class SolicitudService {
       usuario: usuarioId,
       refugio: refugioId,
       datosMascota,
-      mensaje
+      mensajeDelUsuario: mensaje
     });
   }
 
@@ -76,18 +65,11 @@ class SolicitudService {
   async cambiarEstadoSolicitudDarEnAdopcion(solicitudId, nuevoEstado, refugioId) {
     const solicitud = await SolicitudDarEnAdopcionRepository.findById(solicitudId);
     if (!solicitud) throw new Error('Solicitud no encontrada');
-
-    if (solicitud.refugio.toString() !== refugioId) {
-      throw new Error('No autorizado para modificar esta solicitud');
-    }
-
-    if (!['aceptada', 'rechazada'].includes(nuevoEstado)) {
-      throw new Error('Estado inválido');
-    }
+    if (solicitud.refugio.toString() !== refugioId) throw new Error('No autorizado');
+    if (!['aceptada', 'rechazada'].includes(nuevoEstado)) throw new Error('Estado inválido');
 
     const updated = await SolicitudDarEnAdopcionRepository.update(solicitudId, { estado: nuevoEstado });
 
-    // Si se acepta, crear la mascota en el refugio
     if (nuevoEstado === 'aceptada') {
       await MascotaRepository.create({
         ...solicitud.datosMascota,
