@@ -4,7 +4,8 @@ import {
   crearRefugio,
   eliminarRefugio,
   listarRefugios,
-  miRefugio
+  miRefugio,
+  obtenerRefugioPorId // ✅ AGREGAR ESTA IMPORTACIÓN
 } from '../controllers/refugioController.mjs';
 import { authenticate, authorize } from '../middleware/auth.js';
 import { isOwnerOfRefugio } from '../middleware/ownership.js';
@@ -13,7 +14,6 @@ import { validationResult } from 'express-validator';
 
 const router = express.Router();
 
-// Middleware para manejar errores de validación
 const handleValidationErrors = (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -24,6 +24,7 @@ const handleValidationErrors = (req, res, next) => {
 
 // Públicas
 router.get('/', listarRefugios);
+router.get('/:id', obtenerRefugioPorId); // ✅ AGREGAR ESTA RUTA
 
 // Protegidas
 router.post('/', authenticate, authorize('comun'), crearRefugioValidator, handleValidationErrors, crearRefugio);
