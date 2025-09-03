@@ -5,7 +5,7 @@ import {
   eliminarRefugio,
   listarRefugios,
   miRefugio,
-  obtenerRefugioPorId // ✅ AGREGAR ESTA IMPORTACIÓN
+  obtenerRefugioPorId
 } from '../controllers/refugioController.mjs';
 import { authenticate, authorize } from '../middleware/auth.js';
 import { isOwnerOfRefugio } from '../middleware/ownership.js';
@@ -24,7 +24,7 @@ const handleValidationErrors = (req, res, next) => {
 
 // Públicas
 router.get('/', listarRefugios);
-router.get('/:id', obtenerRefugioPorId); // ✅ AGREGAR ESTA RUTA
+router.get('/:id', obtenerRefugioPorId);
 
 // Protegidas
 router.post('/', authenticate, authorize('comun'), crearRefugioValidator, handleValidationErrors, crearRefugio);
