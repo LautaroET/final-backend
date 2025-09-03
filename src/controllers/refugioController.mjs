@@ -41,8 +41,8 @@ export const obtenerRefugioPorId = async (req, res) => {
   try {
     const { id } = req.params;
     
-    // Validar que el ID sea un ObjectId válido de MongoDB
-    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+    // Validación más robusta del ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: 'ID de refugio inválido' });
     }
 
@@ -56,7 +56,10 @@ export const obtenerRefugioPorId = async (req, res) => {
 
     res.status(200).json(refugio);
   } catch (error) {
-    console.error('Error al obtener refugio:', error);
-    res.status(500).json({ message: 'Error al obtener el refugio' });
+    console.error('Error detallado al obtener refugio:', error);
+    res.status(500).json({ 
+      message: 'Error al obtener el refugio',
+      error: error.message 
+    });
   }
 };
