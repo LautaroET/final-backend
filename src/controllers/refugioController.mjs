@@ -1,4 +1,5 @@
 import refugioService from '../services/refugioService.mjs';
+import mongoose from 'mongoose';
 
 export const crearRefugio = async (req, res) => {
   try {
