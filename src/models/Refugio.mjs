@@ -7,6 +7,7 @@ const refugioSchema = new mongoose.Schema(
     telefono: { type: String, required: true },
     email: { type: String, unique: true },
     descripcion: { type: String },
+    imagen: { type: String },
     usuario: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
