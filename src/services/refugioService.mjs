@@ -34,12 +34,7 @@ class RefugioService {
 
     async listarRefugios() {
         return await RefugioRepository.findAll({}, { populate: 'usuario' });
-    }
-
-    async obtenerRefugioPorUsuario(userId) {
-        return await RefugioRepository.findByUsuario(userId);
-    }
-    }
+    },
 async actualizarMiRefugio(data, userId) {
   const refugio = await RefugioRepository.findByUsuario(userId);
   if (!refugio) throw new Error('No tienes un refugio asociado');
