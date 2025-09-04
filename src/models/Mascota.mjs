@@ -17,7 +17,7 @@ const mascotaSchema = new mongoose.Schema(
         default: 'disponible'
         },
         descripcion: { type: String, trim: true, maxlength: 1000 },
-        imagen: [{ url: { type: String, required: true }, descripcion: { type: String } }],
+        imagen: { type: String ,required: true },
         caracteristicas: [String],
         refugio: {
         type: mongoose.Schema.Types.ObjectId,
