@@ -36,8 +36,11 @@ class RefugioService {
     return await RefugioRepository.findAll({}, { populate: 'usuario' });
   }
 
-  async obtenerRefugioPorUsuario(userId) {
-    return await RefugioRepository.findByUsuario(userId);
+  async findByUsuario(usuarioId) {
+    const refugio = await this.model.findOne({ usuario: usuarioId });
+    console.log("🔍 Buscando refugio para usuario:", usuarioId);
+    console.log("🔍 Refugio encontrado:", refugio?._id);
+    return refugio;
   }
 
   async actualizarMiRefugio(data, userId) {
