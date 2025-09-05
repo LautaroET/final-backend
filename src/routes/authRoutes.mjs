@@ -1,7 +1,8 @@
 import express from 'express';
-import { register, login } from '../controllers/authController.mjs';
+import { register, login, me } from '../controllers/authController.mjs';
 import { registerValidator, loginValidator } from '../validators/authValidator.mjs';
 import { validationResult } from 'express-validator';
+import { authenticate } from '../middleware/authMiddleware.mjs';
 
 const router = express.Router();
 
@@ -13,5 +14,6 @@ const validate = (req, res, next) => {
 
 router.post('/register', registerValidator, validate, register);
 router.post('/login', loginValidator, validate, login);
+router.get('/me', authenticate, me); 
 
 export default router;
