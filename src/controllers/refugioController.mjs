@@ -56,3 +56,7 @@ export const actualizarMiRefugio = async (req, res, next) => {
     next(err);
   }
 };
+export const debugRefugio = async (req, res) => {
+  const refugio = await RefugioRepository.findByUsuario(req.user.id);
+  res.json({ userId: req.user.id, refugioId: refugio?._id });
+};
